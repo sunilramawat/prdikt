@@ -10,6 +10,7 @@
 
   body{
     font-family: 'Source Sans Pro', sans-serif;
+    color: #CCC;
   }
 @media(max-width: 991px){
     .containerclass{
@@ -27,11 +28,11 @@
 </style>
 </head>
 <body>
-    <div style="width: 80%;margin: auto;" class="containerclass">
-         <p style="text-align:center;margin-top:20px;font-weight: bold;"><a href="#"><img border="0" width="197" alt="Prdikt" src="{{URL('public/logo.jpeg')}}" style="-ms-interpolation-mode: bicubic;border: 0;height: auto;line-height: 100%;outline: none;text-decoration: none;" /></a></p>
+    <div style="width: 90%;margin: auto;" class="containerclass">
+        
         <h2 style="text-align:center;font-weight: bold;font-size: 18px;margin-top:30px;">Hello,</h2>
     
-        <p style="text-align:center;margin-top:20px;font-weight: bold;">Please, use the verification code below to access Prdikt app.</p>
+        <p style="text-align:center;margin-top:20px;font-weight: bold;"><img src="{{URL('public/32.png')}}">Please, use the verification code below to access Prdikt app.</p>
     
         <h2 style="text-align:center;font-weight: bold;font-size: 32px;">{!! stripslashes( $data['message']) !!}</h2>
     
@@ -39,7 +40,7 @@
     
         <p style="margin-top:20px;font-weight: bold;">From Prdikt.</p>
 
-        <p style="margin-top:20px;font-weight: bold;">Have the question about the closed beta? We'd love to answer! Just hit reply or read some answer <a href="https://prdikt.notion.site/Closed-Beta-FAQ-8215ee2742ad446f9ad6242972059fcc" style="color: #35797a;">here</a></p>
+        <p style="margin-top:20px;font-weight: bold;"><img src="{{URL('public/32(2).png')}}"> <img src="{{URL('public/32(3).png')}}">Have the question about the closed beta? We'd love to answer! Just hit reply or read some answer <a href="https://prdikt.notion.site/Closed-Beta-FAQ-8215ee2742ad446f9ad6242972059fcc" style="color: #35797a;">here</a></p>
 
         <span style="border-bottom:1px solid grey;width: 100%;display: block;margin-top:40px;"></span>
 
@@ -57,9 +58,9 @@
     </div>
     <div style="background-color: #292929;text-align:center;padding-top: 80px;margin-top: 100px;">
         <div style="display: block;margin:auto;">
-             <span style="margin-right: 15px;margin-left:15px;display: inline-block;border-radius:100%;border: 1px solid #fff;padding:8px;"><i class="fa fa-link" style="color:#fff;"></i></span> 
-             <span style="margin-right: 15px;margin-left:15px;display: inline-block;border-radius:100%;border: 1px solid #fff;padding:8px;"><i class="fa fa-envelope-o" style="color:#fff;"></i></span> 
-             <span style="margin-right: 15px;margin-left:15px;display: inline-block;border-radius:100%;border: 1px solid #fff;padding:8px;"><i class="fa fa-linkedin" style="color:#fff;"></i></span> 
+             <span style="margin-right: 15px;margin-left:15px;display: inline-block;border-radius:100%;border: 1px solid #fff;padding:8px;"><img src="{{URL('public/unnamed(1).png')}}" height="20px;"></span> 
+             <span style="margin-right: 15px;margin-left:15px;display: inline-block;border-radius:100%;border: 1px solid #fff;padding:8px;"><img src="{{URL('public/unnamed(2).png')}}" height="20px;"></span> 
+             <span style="margin-right: 15px;margin-left:15px;display: inline-block;border-radius:100%;border: 1px solid #fff;padding:8px;"><img src="{{URL('public/unnamed(3).png')}}" height="20px;"></span> 
         </div>
         <div style="padding:0px 10px;">
             <div class="img" style="background-image: url('https://prdikt.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Ff9e1f40f-82a0-475e-8f3b-60dcf807e1ad%2Fbakcground_LI.jpeg?table=block&id=4f31746a-d0e9-4fea-805a-62a647a5fcbe&spaceId=67511a22-cb68-4317-82a9-69bf3dfcc16a&width=2000&userId=&cache=v2');background-position: center;background-repeat: no-repeat;background-size: cover;height: 40vh;width: 100%;margin-top: 30px;">

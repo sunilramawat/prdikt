@@ -169,20 +169,21 @@ class ActvitiesController extends Controller
 
 
         foreach($healthArray as $key => $value){
-            $healthActivities = new healthActivities();
-            $healthActivities->health_activities_start_date = @$value->startDate ?? NULL;
-            $healthActivities->health_activities_end_date = @$value->endDate ?? NULL;
-            $healthActivities->health_activities_dates = @$value->dates ?? NULL;
-            $healthActivities->health_activities_uuid = auth()->user()->id ?? NULL;
-            $healthActivities->health_activities_device = @$value->device ?? NULL;
-            $healthActivities->health_activities_deviceType = @$value->deviceType ?? NULL;
-            $healthActivities->health_activities_deviceName = @$value->deviceName ?? NULL;
-            $healthActivities->health_activities_minutes  = @$value->minutes ?? NULL;
-            $healthActivities->health_activities_device_id  = @$value->deviceUnquieId ?? NULL;
-            $healthActivities->health_activities_type = @$value->type ?? NULL;
-            $healthActivities->health_activities_source_name = @$value->sourceName?? NULL;
-            $healthActivities->save();
-
+            if(@$value->minutes != 0){
+                $healthActivities = new healthActivities();
+                $healthActivities->health_activities_start_date = @$value->startDate ?? NULL;
+                $healthActivities->health_activities_end_date = @$value->endDate ?? NULL;
+                $healthActivities->health_activities_dates = @$value->dates ?? NULL;
+                $healthActivities->health_activities_uuid = auth()->user()->id ?? NULL;
+                $healthActivities->health_activities_device = @$value->device ?? NULL;
+                $healthActivities->health_activities_deviceType = @$value->deviceType ?? NULL;
+                $healthActivities->health_activities_deviceName = @$value->deviceName ?? NULL;
+                $healthActivities->health_activities_minutes  = @$value->minutes ?? NULL;
+                $healthActivities->health_activities_device_id  = @$value->deviceUnquieId ?? NULL;
+                $healthActivities->health_activities_type = @$value->type ?? NULL;
+                $healthActivities->health_activities_source_name = @$value->sourceName?? NULL;
+                $healthActivities->save();
+            }
             /*$users = User::FindorFail(auth()->user()->id );
 
             $users->last_health_activity = $value->endDate;
@@ -219,22 +220,29 @@ class ActvitiesController extends Controller
 
         $createLogs    = $commonHelper->createLogs($logs);
 
+        User::where('id', $authUser->id)
+                ->update([
+                   'is_heart_file' => 1,
+                ]);
+
         $user = new User;
         $healthArray = json_decode($healthData);
         //echo '<pre>'; print_r($healthArray); exit;
         foreach($healthArray as $key => $value){
-            $healthActivities = new healthActivities();
-            $healthActivities->health_activities_start_date = @$value->startDate ?? NULL;
-            $healthActivities->health_activities_end_date = @$value->endDate ?? NULL;
-            $healthActivities->health_activities_uuid = auth()->user()->id ?? NULL;
-            $healthActivities->health_activities_device = @$value->device ?? NULL;
-            $healthActivities->health_activities_deviceType = @$value->deviceType ?? NULL;
-            $healthActivities->health_activities_deviceName = @$value->deviceName ?? NULL;
-            $healthActivities->health_activities_device_id  = @$value->deviceUnquieId ?? NULL;
-            $healthActivities->heartRate = @$value->heartRate ?? NULL;
-            $healthActivities->health_activities_type = @$value->type ?? NULL;
-            $healthActivities->health_activities_source_name = @$value->sourceName?? NULL;
-            $healthActivities->save();
+            //if(@$value->heartRate != 0){
+                $healthActivities = new healthActivities();
+                $healthActivities->health_activities_start_date = @$value->startDate ?? NULL;
+                $healthActivities->health_activities_end_date = @$value->endDate ?? NULL;
+                $healthActivities->health_activities_uuid = auth()->user()->id ?? NULL;
+                $healthActivities->health_activities_device = @$value->device ?? NULL;
+                $healthActivities->health_activities_deviceType = @$value->deviceType ?? NULL;
+                $healthActivities->health_activities_deviceName = @$value->deviceName ?? NULL;
+                $healthActivities->health_activities_device_id  = @$value->deviceUnquieId ?? NULL;
+                $healthActivities->heartRate = @$value->heartRate ?? NULL;
+                $healthActivities->health_activities_type = @$value->type ?? NULL;
+                $healthActivities->health_activities_source_name = @$value->sourceName?? NULL;
+                $healthActivities->save();
+            ///}
 
            /* $users = User::FindorFail(auth()->user()->id );
 
@@ -256,6 +264,32 @@ class ActvitiesController extends Controller
 
     }
 
+    public function cronHeart()
+    {
+        echo 'Cron Working';
+        $heartQuery =  User::select('id')
+                        ->where('is_heart_file',1)
+                       ->get();
+        if(!empty($heartQuery)){
+            foreach ($heartQuery as $key => $value) {
+                echo $value['id'];
+                $this->generateCsvForHeathData($value['id']);
+                
+                User::where('id', $value['id'])
+                ->update([
+                   'is_heart_file' => 0,
+                ]);
+                // code...
+            }
+
+        }
+
+
+        //echo '<pre>'; print_r($heartQuery->id);
+    }
+
+
+
     public function sleepChart(Request $request){
         $commonHelper = new commonHelper();
         $user = auth()->user();
@@ -267,6 +301,11 @@ class ActvitiesController extends Controller
         ];
 
         $createLogs    = $commonHelper->createLogs($logs);
+        
+        User::where('id', $authUser->id)
+            ->update([
+           'is_sleep_file' => 1,
+        ]);
 
         $healthActivities = new HealthActivities;
         $healthActivitiesType =  $request->health_activities_type;
@@ -419,7 +458,7 @@ class ActvitiesController extends Controller
             'start'."\t".
             'stop'."\n";
 
-        $sleepQuery =  HealthActivities::where('health_activities_type','<',4)
+        $sleepQuery =  HealthActivities::where('health_activities_type','<',3)
                        ->where('health_activities_uuid',$userId)
                        ->get();
         //dd($sleepQuery);
@@ -433,11 +472,9 @@ class ActvitiesController extends Controller
             $wakeTime = 0;
             if($query->health_activities_type == 0){
                 $deepSleepTime = $query->health_activities_minutes;
-                $deepSleepTime = $query->health_activities_minutes;
-                $deepSleepTime = $query->health_activities_minutes ;
             }elseif($query->health_activities_type == 1){
                 $shallowSleepTime = $query->health_activities_minutes;
-            }else{
+            }elseif($query->health_activities_type == 2){
                 $wakeTime = $query->health_activities_minutes;   
             }
 
@@ -520,7 +557,7 @@ class ActvitiesController extends Controller
             $this->controllerName,
             date('Y-m-d H:i:s')
         ];
-        $today = '2022-03-18';
+        //$today = '2022-03-18';
         $createLogs    = $commonHelper->createLogs($logs);
         $response = array();
         $user->id = 32;
@@ -623,7 +660,7 @@ class ActvitiesController extends Controller
        
             $sleep_time = HealthActivities::select('health_activities_start_date','health_activities_end_date' ,'health_activities_dates',\DB::raw("sum(health_activities_minutes) as count"), \DB::raw("DAYNAME(health_activities_dates) as day_name"), \DB::raw("DAY(health_activities_dates) as day"))
             ->where('health_activities_source_name', '!=', 'Mi Fit')
-            ->where('health_activities_dates', '>', Carbon::today()->subDay(17))
+            ->where('health_activities_dates', '>', Carbon::today()->subDay(6))
             ->where('health_activities_uuid',$request->id)
             ->groupBy('day_name','day')
             ->orderBy('day')

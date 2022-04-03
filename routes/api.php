@@ -19,6 +19,7 @@ Route::group(['middleware' => 'api' ], function () {
     
     Route::post('/verified-code',[App\Http\Controllers\API\AuthController::class,'verify']);
     Route::post('/register',[App\Http\Controllers\API\AuthController::class,'register']);
+    
     Route::post('/forgot-password',[App\Http\Controllers\API\AuthController::class,'doForgotPassword']);
     Route::post('/reset-password',[App\Http\Controllers\API\AuthController::class,'doResetPassword']);
     Route::post('/social-login',[App\Http\Controllers\API\AuthController::class,'socialLogin']);
@@ -28,6 +29,8 @@ Route::group(['middleware' => 'api' ], function () {
     
     Route::get('/generate-csv',[App\Http\Controllers\API\ActvitiesController::class,'generateCsvForHeathData']);
 
+    Route::get('/cronHeart',[App\Http\Controllers\API\ActvitiesController::class,'cronHeart']);
+   
 
     Route::group(['middleware' => 'JwtMiddleware' ],function () {
 
